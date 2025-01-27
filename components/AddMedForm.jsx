@@ -252,10 +252,8 @@ const styles = StyleSheet.create({
     padding:8,
     marginTop:30,
     backgroundColor:'black',
-    // alignItems: 'center',
-    // justifyContent:"center",
-    borderRadius:33,
-    width:'70%'
+    borderRadius:23,
+    width:'100%'
 },
   buttonTxt:{
     color:'white',
