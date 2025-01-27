@@ -4,9 +4,10 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
-  TouchableOpacity,
+  TouchableOpacity, Alert
 } from "react-native";
 import React, { useState } from "react";
+import { getLocalStorage } from '../services/Storage';
 import AntDesign from "@expo/vector-icons/AntDesign";
 import colors from "../constant/colors";
 import { timing, typeList, whenTime } from "../constant/options";
@@ -15,12 +16,33 @@ import { Picker } from "@react-native-picker/picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { FormateDate, FormateDateForText, FormateTime } from "../services/TimeFormat";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { setDoc } from "firebase/firestore";
+// import { doc, setDoc } from "firebase/firestore";
+import { db } from "../config/FirebaseConfig";
 
 export default function AddMedForm() {
   const [formData, setFormData] = useState();
   const [showstartdate, setShowStartDate] = useState(false);
   const [showenddate, setShowEndDate] = useState(false);
   const [showstarttime, setShowStartTime] = useState(false);
+
+  const SaveMedication=async()=>{
+    const docId=Date.now().toString();
+    const user=await getLocalStorage('userDetail');
+    if(!(formData?.name || formData?.type || formData?.dosage || formData?.whenTime || formData?.StartDate || formData?.endDate || formData?.reminder)){
+      Alert.alert('All fields are required');
+      return;
+    }
+    try {
+      await setDoc(doc(db,'medication', docId),{
+        ...formData,
+        userEmail:user?.email,
+        docId:docId,
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onHandleInputChange = (event, value) => {
     setFormData((prev) => ({ ...prev, [event]: value }));
@@ -191,7 +213,7 @@ export default function AddMedForm() {
         }
         value={new Date(formData?.StartTime) ?? new Date()}
         />}
-        <TouchableOpacity style={styles?.button}>
+        <TouchableOpacity style={styles?.button} onPress={SaveMedication}>
           <Text style={styles?.buttonTxt}>save</Text>
         </TouchableOpacity>
     </View>
