@@ -1,7 +1,6 @@
 // import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Tabs, useRouter } from "expo-router";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Octicons from "@expo/vector-icons/Octicons";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -9,6 +8,7 @@ import Octicons from "@expo/vector-icons/Octicons";
 import { getLocalStorage } from "../../services/Storage";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { auth } from '../../config/FirebaseConfig';
+import Fontisto from '@expo/vector-icons/Fontisto';
 export default function Tablayout() {
   const router = useRouter();
 
@@ -84,9 +84,9 @@ export default function Tablayout() {
       <Tabs.Screen
         name="AddMed"
         options={{
-          tabBarLabel: "Add-Medicines",
+          tabBarLabel: "History",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="capsules" size={size} color="color" />
+            <Fontisto name="history" size={24} color="black" />
           ),
         }}
       />
