@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
-  TouchableOpacity, Alert
+  TouchableOpacity, Alert,
+  ActivityIndicator
 } from "react-native";
 import React, { useState } from "react";
 import { getLocalStorage } from '../services/Storage';
@@ -14,17 +15,19 @@ import { timing, typeList, whenTime } from "../constant/options";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Picker } from "@react-native-picker/picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { FormateDate, FormateDateForText, FormateTime } from "../services/TimeFormat";
+import { FormateDate, FormateDateForText, FormateTime, getDatesRange } from "../services/TimeFormat";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { setDoc } from "firebase/firestore";
-// import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
+import { useRouter } from "expo-router";
 
 export default function AddMedForm() {
   const [formData, setFormData] = useState();
   const [showstartdate, setShowStartDate] = useState(false);
   const [showenddate, setShowEndDate] = useState(false);
   const [showstarttime, setShowStartTime] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router= useRouter();
 
   const SaveMedication=async()=>{
     const docId=Date.now().toString();
@@ -33,13 +36,27 @@ export default function AddMedForm() {
       Alert.alert('All fields are required');
       return;
     }
+    const dates= getDatesRange(formData?.StartDate,formData?.endDate);
+    setLoading(true);
     try {
       await setDoc(doc(db,'medication', docId),{
         ...formData,
         userEmail:user?.email,
         docId:docId,
-      })
+        dates:dates,
+      });
+      console.log('Medication Added');
+      setLoading(false);
+      Alert.alert('Great...!','successfully Added',[
+        {
+          text:'ok',
+          onPress:()=>{
+            router.push('(tabs)')
+            }
+        }
+      ]);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -214,7 +231,11 @@ export default function AddMedForm() {
         value={new Date(formData?.StartTime) ?? new Date()}
         />}
         <TouchableOpacity style={styles?.button} onPress={SaveMedication}>
-          <Text style={styles?.buttonTxt}>save</Text>
+          { loading? <ActivityIndicator 
+          color={'white'}
+          size={'small'}
+          />:
+          <Text style={styles?.buttonTxt}>save</Text>}
         </TouchableOpacity>
     </View>
   );

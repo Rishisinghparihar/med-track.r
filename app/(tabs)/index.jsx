@@ -8,6 +8,7 @@ import { auth } from '../../config/FirebaseConfig'
 import { clearLocalStorage } from '../../services/Storage'
 import Header from '../../components/Header'
 import EmptyHome from '../../components/EmptyHome'
+import MedicineList from '../../components/MedicineList'
 
 
 export default function HomeScreen() {
@@ -23,7 +24,7 @@ export default function HomeScreen() {
       backgroundColor: 'orange',
     }}>
       <Header/>
-      <EmptyHome/>
+      <MedicineList/>
     </View>
   )
 }
