@@ -20,9 +20,10 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
 import { useRouter } from "expo-router";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddMedForm() {
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({});
   const [showstartdate, setShowStartDate] = useState(false);
   const [showenddate, setShowEndDate] = useState(false);
   const [showstarttime, setShowStartTime] = useState(false);
@@ -32,14 +33,15 @@ export default function AddMedForm() {
   const SaveMedication=async()=>{
     const docId=Date.now().toString();
     const user=await getLocalStorage('userDetail');
-    if(!(formData?.name || formData?.type || formData?.dosage || formData?.whenTime || formData?.StartDate || formData?.endDate || formData?.reminder)){
+    if((!formData?.name || !formData?.type || !formData?.dosage || !formData?.whenTime || !formData?.StartDate || !formData?.endDate || !formData?.reminder)){
       Alert.alert('All fields are required');
       return;
     }
     const dates= getDatesRange(formData?.StartDate,formData?.endDate);
+    console.log(dates);
     setLoading(true);
     try {
-      await setDoc(doc(db,'medication', docId),{
+      await setDoc(doc(db,'rishi', docId),{
         ...formData,
         userEmail:user?.email,
         docId:docId,

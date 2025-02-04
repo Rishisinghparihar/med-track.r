@@ -10,7 +10,7 @@ export default function Header() {
   const [user, setUser]=useState();
   useEffect(()=>{
     GetUserDetail();
-  })
+  },[])
 //to get user name printed to main home screen
   const GetUserDetail= async()=>{
     // console.log('userInfo');
@@ -66,4 +66,3 @@ const styles = StyleSheet.create({
 
   }
 });
-

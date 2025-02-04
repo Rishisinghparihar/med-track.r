@@ -9,6 +9,8 @@ import { clearLocalStorage } from '../../services/Storage'
 import Header from '../../components/Header'
 import EmptyHome from '../../components/EmptyHome'
 import MedicineList from '../../components/MedicineList'
+import MedicineCard from '../../components/MedicineCard'
+import AddMedForm from '../../components/AddMedForm'
 
 
 export default function HomeScreen() {
@@ -24,7 +26,9 @@ export default function HomeScreen() {
       backgroundColor: 'orange',
     }}>
       <Header/>
+      {/* <EmptyHome/> */}
       <MedicineList/>
+      {/* <MedicineCard/> */}
     </View>
   )
 }
