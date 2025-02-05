@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocalStorage } from '../services/Storage';
-import Feather from '@expo/vector-icons/Feather';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '../constant/colors';
+import { useRouter } from 'expo-router';
 
 export default function Header() {
-  
+  const router = useRouter();
   const [user, setUser]=useState();
   useEffect(()=>{
     GetUserDetail();
@@ -30,7 +31,9 @@ export default function Header() {
         style={styles.text}>
         Namastey {user?.displayName} 🙏 </Text>
         </View>
-        <Feather name="settings" size={24} color={colors.DARK_BLACK} />
+        <TouchableOpacity onPress={()=>router.push('/add-new-med')}>
+        <Ionicons name="medkit-outline" size={20} color="black" />
+        </TouchableOpacity>
       </View>
     </View>
   );

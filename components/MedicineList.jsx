@@ -9,61 +9,68 @@ import {
 import React, { useEffect, useState } from "react";
 import { getDateRangeToDisplay } from "./../services/TimeFormat";
 import moment from "moment";
-import { collection, getDocs, query, where, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  Timestamp,
+} from "firebase/firestore";
 import MedicineCard from "./MedicineCard";
 import { getLocalStorage } from "../services/Storage";
 import { db } from "../config/FirebaseConfig";
 import AddMedForm from "./AddMedForm";
 import { typeList } from "../constant/options";
+import EmptyHome from "./EmptyHome";
+
 
 export default function MedicineList() {
-  const [medList, setMedList] = useState();
+  const [medList, setMedList] = useState([]);
   const [dateRange, setDateRange] = useState();
   const [selectedDate, setSelectedDate] = useState(
     moment().format("DD/MM/YYYY")
   );
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     GetDateRangeList();
     GetMedicationList(selectedDate);
-  }, []);
+  }, [selectedDate]);
   const GetDateRangeList = () => {
     const dateRange = getDateRangeToDisplay();
     console.log(dateRange);
     setDateRange(dateRange);
   };
   const GetMedicationList = async (selectedDate) => {
+    setLoading(true);
     const user = await getLocalStorage("userDetail");
-    console.log(user);
+    console.log("User:", user);
     try {
-      const dateParts = selectedDate.split("/");
-    const selectedTimestamp = Timestamp.fromDate(
-      new Date(dateParts[2], dateParts[1] - 1, dateParts[0]) // YYYY, MM (0-based), DD
-    );
-
       const q = query(
         collection(db, "rishi"),
-        where("useremail", "==", user?.email),
-        where("date", "array-contains", selectedTimestamp)
+        where("userEmail", "==", user?.email),
+        where("dates", "array-contains", selectedDate)
       );
- 
+
+      console.log("Query:", q);
+
       const querySnapshot = await getDocs(q);
       let medications = [];
-      setMedList(typeList);
       querySnapshot.forEach((doc) => {
-        console.log("docId: "+doc.id, " => ", doc.data());
-        setMedList((prev) => [...prev, doc.data()]);
+        console.log("Document Data:", doc.data());
         let data = doc.data();
-        let typeInfo = typeList.find((item) => item.name === data.type);
-      data.type = {
-        name: data.type,
-        icon: typeInfo ? typeInfo.icon : null
-      };
-
-      medications.push(data);
-    });
-    setMedList(medications);
+        let typeInfo = typeList.find((item) => item.name === data.type.name);
+        data.type = {
+          name: data.type.name,
+          icon: typeInfo ? typeInfo.icon : null,
+        };
+        medications.push(data);
+      });
+      setMedList(medications);
+      console.log("Medications List:", medications);
+      setLoading(false);
     } catch (e) {
-      console.log(e);
+      console.log("Error fetching medications:", e);
+      setLoading(false);
     }
   };
   console.log(medList);
@@ -78,7 +85,10 @@ export default function MedicineList() {
         horizontal={true}
         renderItem={({ item, index }) => (
           <TouchableOpacity
-            onPress={() => setSelectedDate(item.FormateDate)}
+            onPress={() => {
+              setSelectedDate(item.FormateDate);
+              GetMedicationList(item.FormateDate);
+            }}
             style={[
               styles.view11,
               {
@@ -106,9 +116,17 @@ export default function MedicineList() {
           </TouchableOpacity>
         )}
       />
-          <MedicineCard />
-        
-    
+      {medList?.length>0? <FlatList
+        data={medList}
+        onRefresh={()=>GetMedicationList(selectedDate)}
+        refreshing={loading}
+        renderItem={({ item }) => 
+        <TouchableOpacity>
+        <MedicineCard medicine={item} />
+        </TouchableOpacity>
+        }
+        keyExtractor={(item, index) => index.toString()}
+      /> : <EmptyHome/>}
     </View>
   );
 }

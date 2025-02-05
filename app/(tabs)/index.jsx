@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, ScrollView, FlatList } from 'react-native'
 import React from 'react'
 import { signOut } from 'firebase/auth'
 import { Redirect } from 'expo-router'
@@ -12,23 +12,23 @@ import MedicineList from '../../components/MedicineList'
 import MedicineCard from '../../components/MedicineCard'
 import AddMedForm from '../../components/AddMedForm'
 
-
 export default function HomeScreen() {
-  const[isMounted, setIsMounted]= useState(false) 
-  useEffect(()=>{setIsMounted(false)},[])
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => { setIsMounted(true); }, []);
   return (
-    <View style={{
-      flex: 1,
-      padding:25,
-      height:'100%',
-      // justifyContent: 'center',
-      // alignItems: 'center',
-      backgroundColor: 'orange',
-    }}>
-      <Header/>
-      {/* <EmptyHome/> */}
-      <MedicineList/>
-      {/* <MedicineCard/> */}
-    </View>
-  )
+    <FlatList
+    data={[]}
+    ListHeaderComponent={
+      <View style={{
+        flex: 1,
+        padding: 25,
+        height: '100%',
+        backgroundColor: 'orange',
+      }}>
+        <Header />
+        {isMounted && <MedicineList />}
+      </View>
+    }/>
+    
+  );
 }

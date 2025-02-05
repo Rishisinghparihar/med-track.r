@@ -1,75 +1,94 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
+import { View, Text, Image, StyleSheet } from "react-native";
+import React from "react";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
-export default function MedicineCard({medicine}) {
-  console.log({medicine})
+export default function MedicineCard({ medicine }) {
+  console.log("MedicineCard Data:", medicine);
   return (
-    <View>
-        <View>
-            <Image 
-            source={require('./../assets/icons/pill.png')}
-            style={{width:50,height:50,opacity:0.5,}}/> 
-            <Text>{medicine?.name}</Text>
-            <Text>{medicine?.when}</Text>
-            <Text>{medicine?.dose}{medicine?.type.name}</Text>
+    <View style={styles.view3}>
+      <View style={styles.view2}>
+        <View style={styles.view1}>
+          <Image
+            source={{
+              uri: medicine?.type?.icon || "https://via.placeholder.com/100",
+            }}
+            style={{ width: 42, height: 42, opacity: 0.7 }}
+          />
         </View>
+        <View>
+          <Text style={styles.textname}>{medicine?.name}</Text>
+          <Text style={styles.when}>{medicine?.whenTime}</Text>
+          <Text style={styles.dose}>
+            {medicine?.dosage} {medicine?.type?.name}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.clock}>
+        <EvilIcons name="clock" size={25} color="black" />
+        <Text style={styles.time}>{medicine?.reminder}</Text>
+      </View>
     </View>
-  )
+  );
 }
-
-
-
-// import { View, Text, Image, StyleSheet } from 'react-native';
-// import React from 'react';
-
-// export default function MedicineCard({ medicine }) {
-//   return (
-//     <View style={styles.card}>
-//       {/* Medicine Icon */}
-//       <Image 
-//         source={{ uri: medicine?.type?icon || 'https://via.placeholder.com/100' :""}} 
-//         style={styles.image} 
-//       />
-
-//       {/* Medicine Details */}
-//       <View style={styles.details}>
-//         <Text style={styles.name}>{medicine?.name || "Unknown Medicine"}</Text>
-//         <Text style={styles.dosage}>{medicine?.dosage || "No Dosage Info"}</Text>
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   card: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     backgroundColor: '#f8f9fa',
-//     padding: 10,
-//     marginVertical: 8,
-//     borderRadius: 10,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.2,
-//     shadowRadius: 4,
-//     elevation: 3, // For Android shadow
-//   },
-//   image: {
-//     width: 60,
-//     height: 60,
-//     borderRadius: 10,
-//     marginRight: 15,
-//   },
-//   details: {
-//     flex: 1,
-//   },
-//   name: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     color: '#333',
-//   },
-//   dosage: {
-//     fontSize: 14,
-//     color: '#666',
-//   },
-// });
+const styles = StyleSheet.create({
+  view1: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "white",
+    marginRight: 10,
+    borderRightWidth: 0.5,
+    borderRightColor: "gray",
+    // borderCurve: "circular",
+    // gap: 10,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'space-between'
+  },
+  view2: {
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "space-between",
+    backgroundColor: "white",
+    // margin: 10,
+    // padding: 10,
+    borderRadius: 12,
+    borderWidth:0.3,
+    // elevation: 10,
+  },
+  view3: {
+    backgroundColor: "gray",
+    marginTop: 10,
+    padding: 4,
+    borderRadius: 12,
+    borderWidth:0.3,
+    // elevation: 10,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'space-between'
+  },
+  textname: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  when: {
+    color: "gray",
+    fontSize: 12,
+  },
+  dose: {
+    color: "gray",
+    fontSize: 12,
+  },
+  time: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  clock: {
+    flexDirection: "row",
+    backgroundColor: "gray",
+    padding: 4,
+    borderRadius: 0,
+    marginTop: 0,
+    gap: 5,
+  },
+});
