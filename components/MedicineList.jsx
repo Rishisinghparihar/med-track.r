@@ -22,9 +22,11 @@ import { db } from "../config/FirebaseConfig";
 import AddMedForm from "./AddMedForm";
 import { typeList } from "../constant/options";
 import EmptyHome from "./EmptyHome";
+import { useRouter } from "expo-router";
 
 
 export default function MedicineList() {
+  const router = useRouter();
   const [medList, setMedList] = useState([]);
   const [dateRange, setDateRange] = useState();
   const [selectedDate, setSelectedDate] = useState(
@@ -121,7 +123,13 @@ export default function MedicineList() {
         onRefresh={()=>GetMedicationList(selectedDate)}
         refreshing={loading}
         renderItem={({ item }) => 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>router.push({
+          pathname:'/action',
+          params: {
+            ...item,
+            selectedDate: selectedDate
+          }
+        })}>
         <MedicineCard medicine={item} />
         </TouchableOpacity>
         }
