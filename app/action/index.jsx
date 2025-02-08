@@ -5,8 +5,9 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/FirebaseConfig";
+import moment from "moment";
 
 export default function MedicineAction() {
   const medicine = useLocalSearchParams();
@@ -16,7 +17,7 @@ export default function MedicineAction() {
     try {
       const docRef= doc(db,'rishi', medicine?.docId);
       await updateDoc(docRef,{
-        action: arrayUnion({status:status, time: moment().format('ll'),date: medicine?.selectedDate})
+        action: arrayUnion({status:status, time: moment().format('LT'),date: medicine?.selectedDate})
       });
       Alert.alert(status, 'Response-Saved!',[{
         text: 'OK',

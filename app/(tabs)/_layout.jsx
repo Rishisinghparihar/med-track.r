@@ -82,7 +82,7 @@ export default function Tablayout() {
         }}
       />
       <Tabs.Screen
-        name="AddMed"
+        name="history"
         options={{
           tabBarLabel: "History",
           tabBarIcon: ({ color, size }) => (

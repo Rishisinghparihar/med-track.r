@@ -130,7 +130,7 @@ export default function MedicineList() {
             selectedDate: selectedDate
           }
         })}>
-        <MedicineCard medicine={item} />
+        <MedicineCard medicine={item} selectedDate={selectedDate} />
         </TouchableOpacity>
         }
         keyExtractor={(item, index) => index.toString()}

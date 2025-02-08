@@ -1,9 +1,20 @@
 import { View, Text, Image, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function MedicineCard({ medicine }) {
+export default function MedicineCard({ medicine, selectedDate='' }) {
   console.log("MedicineCard Data:", medicine);
+  const [status, setStatus]= useState();
+  useEffect(()=>{
+    CheckStatus();
+  },[medicine])
+  const CheckStatus=()=>{
+    const data = medicine?.action?.find((item)=>item.date===selectedDate);
+    console.log('==',data);
+    setStatus(data);
+  }
   return (
     <View style={styles.view3}>
       <View style={styles.view2}>
@@ -22,6 +33,9 @@ export default function MedicineCard({ medicine }) {
             {medicine?.dosage} {medicine?.type?.name}
           </Text>
         </View>
+        {status?.date &&<View style={styles.statusContainer}>
+          {status?.status=='Taken'?<Ionicons name="checkmark-done" size={18} color="green" />:status?.status=='Missed'&&<AntDesign name="close" size={18} color="red" />}
+        </View>}
       </View>
       <View style={styles.clock}>
         <EvilIcons name="clock" size={25} color="black" />
@@ -52,7 +66,7 @@ const styles = StyleSheet.create({
     // margin: 10,
     // padding: 10,
     borderRadius: 12,
-    borderWidth:0.3,
+    borderWidth: 0.3,
     // elevation: 10,
   },
   view3: {
@@ -60,7 +74,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 4,
     borderRadius: 12,
-    borderWidth:0.3,
+    borderWidth: 0.3,
     // elevation: 10,
     // flexDirection: 'row',
     // alignItems: 'center',
@@ -91,4 +105,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
     gap: 5,
   },
+  statusContainer:{
+    // position: "absolute",
+    // top: 5,
+    padding:10,
+  }
 });
